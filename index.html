@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Science Day Project - Simple Harmonic Motion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --gradient-bg: linear-gradient(135deg, #3498db, #8e44ad);
+            --text-light: #ecf0f1;
+            --text-dark: #2c3e50;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            --card-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--gradient-bg);
+            color: var(--text-light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://physicscatalyst.com/articleImage/wave14.gif') center/cover no-repeat;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .hero-content {
+            width: 60%;
+            animation: slideIn 1s ease-out forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .hero h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .hero h2 {
+            font-size: 1.8rem;
+            color: var(--accent-color);
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            max-width: 700px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+            border: none;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.6);
+        }
+
+        /* About Section */
+        section {
+            padding: 100px 0;
+        }
+
+        section:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            display: inline-block;
+            position: relative;
+            padding-bottom: 15px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-top: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .about-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transform: rotate(2deg);
+            transition: transform 0.5s ease;
+        }
+
+        .about-image:hover {
+            transform: rotate(0deg) scale(1.02);
+        }
+
+        .about-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Gallery Section */
+        .gallery {
+            margin: 50px 0;
+        }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            height: 250px;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .gallery-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-item::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .gallery-item:hover::after {
+            opacity: 1;
+        }
+
+        .gallery-item-title {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: white;
+            z-index: 2;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        .gallery-item:hover .gallery-item-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Team Section */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .team-member {
+            background-color: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .team-member.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-member-img {
+            width: 100%;
+            height: 180px;
+            background-color: #3498db;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .team-member-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            opacity: 0.8;
+        }
+
+        .team-member-img::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            opacity: 0.2;
+        }
+
+        .team-member-info {
+            padding: 20px;
+        }
+
+        .team-member-name {
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .team-member-role {
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        /* Experiment Section */
+        .experiment-section {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 50px;
+            margin-top: 50px;
+            box-shadow: var(--shadow);
+        }
+
+        .experiment-container {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .experiment-visual {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .experiment-visual img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .experiment-content {
+            flex: 1;
+        }
+
+        .experiment-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+
+        .experiment-steps {
+            margin-left: 20px;
+        }
+
+        .experiment-steps li {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .experiment-steps li::before {
+            content: '';
+            position: absolute;
+            left: -20px;
+            top: 8px;
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+        }
+
+        /* Footer */
+        footer {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 60px 0 30px;
+            margin-top: 100px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        .footer-column p, .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-column a:hover {
+            color: var(--accent-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-content {
+                width: 100%;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+
+            .experiment-container {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav .container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero h2 {
+                font-size: 1.5rem;
+            }
+
+            .section-title h2 {
+                font-size: 2rem;
+            }
+
+            .gallery-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            }
+        }
+
+        /* Animation for Scroll */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Particle Background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -10;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">Tech Titans</a>
+            <div class="nav-links">
+                <a href="#about">About</a>
+                <a href="#gallery">Gallery</a>
+                <a href="#experiment">Experiment</a>
+                <a href="#team">Team</a>
+                <a href="#contact">Project</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Science Day Project</h1>
+                <h2>Simple Harmonic Motion</h2>
+                <p>Explore the fascinating world of oscillations and waves through our interactive project demonstrating the principles and applications of Simple Harmonic Motion.</p>
+                <a href="#about" class="btn">Discover More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+        <div class="container">
+            <div class="section-title">
+                <h2>About Our Project</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text fade-in">
+                    <p>On the occasion of Science Day, our college is hosting a grand Science Fest to celebrate the wonders of scientific innovation and discovery. As part of this event, we have created a project on Simple Harmonic Motion (SHM), a fundamental concept in physics that has wide-ranging applications in engineering, mechanics, and real-world phenomena.</p>
+                    <p>Our project aims to demonstrate the principles of SHM through interactive models and experiments, helping visitors understand its significance in oscillatory motion and various technological advancements. We've created physical pendulums, spring-mass systems, and digital simulations to showcase different aspects of harmonic motion.</p>
+                    <p>Through this exhibit, we hope to inspire curiosity about the mathematical beauty and practical importance of oscillatory systems in our daily lives - from the ticking of a clock to the functioning of electronic circuits.</p>
+                </div>
+                <div class="about-image fade-in">
+                    <img src="https://www.webassign.net/question_assets/ncsucalcphysmechl3/lab_7_1/images/figure1.jpg" alt="Simple Harmonic Motion Project">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section id="gallery" class="gallery">
+        <div class="container">
+            <div class="section-title">
+                <h2>Project Gallery</h2>
+            </div>
+            <div class="gallery-container">
+                <div class="gallery-item">
+                    <img src="https://files.askiitians.com/cdn1/images/201548-103956278-8305-im-2.gif" alt="Pendulum Experiment">
+                    <div class="gallery-item-title">Pendulum Oscillation</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Simple_harmonic_motion.png" alt="Spring Model">
+                    <div class="gallery-item-title">Spring-Mass System</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="https://cdn1.byjus.com/wp-content/uploads/2020/11/Simple-Harmonic-Motion-SHM-10.png" alt="Differential Equations">
+                    <div class="gallery-item-title">Mathematical Models</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experiment Section -->
+    <section id="experiment">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Experiment</h2>
+            </div>
+            <div class="experiment-section fade-in">
+                <div class="experiment-container">
+                    <div class="experiment-visual">
+                        <img src="https://schoolworkhelper.net/wp-content/uploads/2023/10/Pendulum-SHM.jpg" alt="SHM Experiment">
+                    </div>
+                    <div class="experiment-content">
+                        <h3>Pendulum Oscillation Experiment</h3>
+                        <p>We've designed a simple yet effective experiment to demonstrate the properties of Simple Harmonic Motion using a pendulum system.</p>
+                        <ul class="experiment-steps">
+                            <li>Measure the length of the pendulum and calculate the theoretical period using T = 2π√(L/g)</li>
+                            <li>Set up the pendulum with different masses to show that period is independent of mass</li>
+                            <li>Record the oscillation using high-speed cameras to analyze the waveform</li>
+                            <li>Compare the experimental results with theoretical predictions</li>
+                            <li>Demonstrate damping effects by introducing resistance</li>
+                        </ul>
+                        <p>Through this experiment, visitors can observe how the amplitude, frequency, and energy of the system change over time, illustrating key principles of harmonic motion.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Team</h2>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Sarvesh Pandey</div>
+                        <div class="team-member-role">Team Lead</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Aditya Pathak</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Parmeet Kaur</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Aryan Singh</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Kaina Narang</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Kashif Mirza Beg</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Mayank</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Sharuya Singh Thakur</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Vansh Sharma</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+                <div class="team-member">
+                    <div class="team-member-img"></div>
+                    <div class="team-member-info">
+                        <div class="team-member-name">Harish Sukhija</div>
+                        <div class="team-member-role">Member</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <div class="container">
+            <div class="section-title">
+                <h2>PROJECT</h2>
+            </div>
+            <div class="experiment-section fade-in">
+                <div class="experiment-container">
+                    <div class="experiment-content">
+                        <h3>Interested in learning more?</h3>
+                        <p>Feel free to reach out to our team for any questions about our Science Day project on Simple Harmonic Motion. We'd be happy to discuss our findings, share our research, or explain our experimental setup.</p>
+                        <a href="https://sarvesh9213.github.io/science_project/" target="_blank" class="btn" id="goToProjectBtn">Visit Our Project Website</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Tech Titans</h3>
+                    <p>A passionate team of science enthusiasts exploring the wonders of physics through interactive experiments and demonstrations.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <a href="#about">About Project</a>
+                    <a href="#gallery">Project Gallery</a>
+                    <a href="#experiment">Our Experiment</a>
+                    <a href="#team">Meet the Team</a>
+                </div>
+                <div class="footer-column">
+                    <h3>Tarang 2025</h3>
+                    <p>Date: February 28, 2025</p>
+                    <p>Venue: College Campus</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; TECH TITANS FOR THE WIN</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Particle Background -->
+    <div class="particles"></div>
+
+    <script>
+        // Scroll animation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll for navigation
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // Fade-in animation for elements when scrolled into view
+            const fadeElements = document.querySelectorAll('.fade-in, .gallery-item, .team-member');
+            
+            function checkFade() {
+                fadeElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('visible');
+                    }
+                });
+            }
+            
+            window.addEventListener('scroll', checkFade);
+            checkFade(); // Initial check
+            
+            // Particle animation for background
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.style.position = 'absolute';
+                particle.style.width = `${Math.random() * 5 + 1}px`;
+                particle.style.height = particle.style.width;
+                particle.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                particle.style.borderRadius = '50%';
+                
+                // Random starting position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Animation
+                particle.style.animation = `particleFloat ${Math.random() * 15 + 5}s linear infinite`;
+                particle.style.opacity = Math.random() * 0.5 + 0.1;
+                
+                particlesContainer.appendChild(particle);
+            }
+            
+            // Add particle animation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @keyframes particleFloat {
+                    0% {
+                        transform: translateY(0) rotate(0deg);
+                    }
+                    100% {
+                        transform: translateY(-100vh) rotate(360deg);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Project button click
+            document.getElementById('goToProjectBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = this.href;
+            });
+        });
+    </script>
+</body>
+</html>
